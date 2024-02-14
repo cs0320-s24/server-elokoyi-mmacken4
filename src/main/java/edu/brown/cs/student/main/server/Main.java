@@ -1,8 +1,8 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.server;
 
 // import static com.squareup.moshi.adapters.Iso8601Utils.parse;
-import static edu.brown.cs.student.main.CSVParser.parse;
-import static edu.brown.cs.student.main.CSVParser.searchCSV;
+import static edu.brown.cs.student.main.server.CSVParser.parse;
+import static edu.brown.cs.student.main.server.CSVParser.searchCSV;
 
 import java.io.IOException;
 import java.util.List;

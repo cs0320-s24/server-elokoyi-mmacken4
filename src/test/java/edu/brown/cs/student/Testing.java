@@ -2,7 +2,7 @@ package edu.brown.cs.student;
 
 import static org.testng.AssertJUnit.assertNotNull;
 
-import edu.brown.cs.student.main.CSVParser;
+import edu.brown.cs.student.main.server.CSVParser;
 import java.io.IOException;
 import java.io.StringReader;
 import org.testng.annotations.Test;
