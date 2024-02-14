@@ -22,17 +22,17 @@ public final class Main {
   private Main(String[] args) throws IOException {
 
     if (args.length < 3) {
-      System.err.println("Usage: java CSVParser <filename> <searchValue> <columnIdentifier>");
+      System.err.println("Enter the paramaters");
       System.exit(1);
     }
 
     String filename = args[0];
     String searchValue = args[1];
-    int columnIdentifier = Integer.parseInt(args[2]);
+    int columnIndex = Integer.parseInt(args[2]);
 
     List<String[]> csvData = parse(filename, true);
     if (csvData != null) {
-      searchCSV(csvData, searchValue, columnIdentifier);
+      searchCSV(csvData, searchValue, columnIndex);
     }
   }
 
