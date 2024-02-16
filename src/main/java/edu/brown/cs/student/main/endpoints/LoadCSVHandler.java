@@ -36,7 +36,7 @@ public class LoadCSVHandler<T> implements Route {
 
   private String line;
 
-  static String loadedCSVFilePath = "RI_income.csv";
+  public String loadedCSVFilePath;
 
   public LoadCSVHandler() {
     // this.reader = new BufferedReader(reader);
@@ -44,10 +44,15 @@ public class LoadCSVHandler<T> implements Route {
     this.creator = creator;
     this.hasHeaders = hasHeaders;
     this.headers = new ArrayList<>();
+    this.loadedCSVFilePath = loadedCSVFilePath;
+  }
+
+  public String getLoadedCSVFilePath() {
+    return this.loadedCSVFilePath;
   }
 
   @Override
-  public Object handle(Request request, Response response) {
+  public Object handle(Request request, Response response) throws FactoryFailureException {
     Set<String> params = request.queryParams();
     String filePath = request.queryParams("filepath");
 
@@ -58,8 +63,7 @@ public class LoadCSVHandler<T> implements Route {
       if (filePath != null && !filePath.isEmpty()) {
         // Attempt to load the CSV file using your preferred CSV parsing logic
         List<List<String>> csvData = loadLocalCSVFile(filePath);
-        //
-        loadedCSVFilePath = filePath;
+        // loadedCSVFilePath = filePath;
         // Check if the CSV file loading was successful
         if (csvData != null) {
           // Update the loadedCSVFilePath variable to keep track of the loaded file
@@ -68,77 +72,48 @@ public class LoadCSVHandler<T> implements Route {
           // Return success response with the loaded file path
           responseMap.put("result", "success");
           responseMap.put("filepath", loadedCSVFilePath);
-          return responseMap;
-        } else {
-          responseMap.put("result", "error_datasource");
-          responseMap.put("details", "Unable to load CSV file");
-          return responseMap;
+          //        } else {
+          //          responseMap.put("result", "error_datasource");
+          //          responseMap.put("details", "Unable to load CSV file");
+          //        }
+          //        return responseMap;
+          //      } else {
+          //        responseMap.put("result", "error_bad_request");
+          //        responseMap.put("details", "Invalid file path");
+          //        return responseMap;
         }
-      } else {
-        responseMap.put("result", "error_bad_request");
-        responseMap.put("details", "Invalid file path");
-        return responseMap;
       }
     } catch (Exception e) {
       e.printStackTrace();
       responseMap.put("result", "Exception");
+
       return responseMap;
     }
+    return responseMap;
   }
+
+  //  private List<List<String>> loadLocalCSVFile(String filePath)
+  //      throws FactoryFailureException, FileNotFoundException {
+  //
+  //    CSVParser csvParser = new CSVParser<>(new FileReader(filePath), creator, true);
+  //    System.out.println(filePath);
+  //    return csvParser.parse();
+  //  }
 
   private List<List<String>> loadLocalCSVFile(String filePath)
       throws FactoryFailureException, FileNotFoundException {
+    // Create a CSVParser instance with FileReader
+    Creator creator1 = new Creator();
+    CSVParser<String> csvParser = new CSVParser<>((new FileReader(filePath)), creator1, true);
 
-    CSVParser csvParser = new CSVParser<>((new FileReader(filePath)), creator, true);
-    System.out.println(filePath);
-    return csvParser.parse();
+    try {
+      // Parse the CSV file and return the data
+      return csvParser.parse();
+    } catch (FactoryFailureException e) {
+      // Log or handle the exception as needed
+      throw e;
+    }
   }
-
-  //  private static Map<String, Object> successResponse(Object... params) {
-  //    Map<String, Object> responseMap = new HashMap<>();
-  //    responseMap.put("result", "success");
-  //
-  //    for (int i = 0; i < params.length; i += 2) {
-  //      responseMap.put((String) params[i], params[i + 1]);
-  //    }
-  //
-  //    return responseMap;
-  //  }
-  //
-  //  private static Map<String, Object> errorResponse(String errorCode, String details) {
-  //    Map<String, Object> responseMap = new HashMap<>();
-  //    responseMap.put("result", errorCode);
-  //    responseMap.put("details", details);
-  //
-  //    return responseMap;
-  //  }
-
-  //  public Route handleLoadCSV(Request request, Response response) {
-  //        String filePath = request.queryParams("filepath");
-  //
-  //        // Check if the provided file path is not null and not empty
-  //        if (filePath == null || filePath.isEmpty()) {
-  //          return errorResponse("error_bad_request", "Invalid file path");
-  //        }
-  //
-  //        // Attempt to load the CSV file using your preferred CSV parsing logic
-  //        // For simplicity, let's assume you have a method loadCSVFile that returns the data
-  //        Creator<String> creator = new Creator<>();
-  //        CSVParser<String> csvParser = new CSVParser<>(new FileReader(filePath), creator, true);
-  //        List<List<String>> csvData = csvParser.parse();
-  //
-  //        // Check if the CSV file loading was successful
-  //        if (csvData == null) {
-  //          return errorResponse("error_datasource", "Unable to load CSV file");
-  //        }
-  //
-  //        System.out.println("success");
-  //        // Update the loadedCSVFilePath variable to keep track of the loaded file
-  //        loadedCSVFilePath = filePath;
-  //
-  //        // Return success response with the loaded file path
-  //        return successResponse("filepath", loadedCSVFilePath);
-  //      };
 
   private String sendRequest(int stateNum)
       throws URISyntaxException, IOException, InterruptedException {
@@ -165,3 +140,4 @@ public class LoadCSVHandler<T> implements Route {
     return sentBoredApiResponse.body();
   }
 }
+;
