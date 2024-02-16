@@ -29,10 +29,10 @@ public class Server {
            - https://portswigger.net/web-security/cors
     */
     after(
-        (request, response) -> {
-          response.header("Access-Control-Allow-Origin", "*");
-          response.header("Access-Control-Allow-Methods", "*");
-        });
+            (request, response) -> {
+              response.header("Access-Control-Allow-Origin", "*");
+              response.header("Access-Control-Allow-Methods", "*");
+            });
 
     // Sets up data needed for the OrderHandler. You will likely not read from local
     // JSON in this sprint.
