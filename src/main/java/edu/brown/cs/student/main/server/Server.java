@@ -7,8 +7,11 @@ import edu.brown.cs.student.main.data.ACS.ACSAPIUtilities;
 import edu.brown.cs.student.main.endpoints.LoadCSVHandler;
 import edu.brown.cs.student.main.endpoints.SearchCSVHandler;
 import edu.brown.cs.student.main.endpoints.ViewCSVHandler;
+import edu.brown.cs.student.main.endpoints.BroadbandHandler;
 import java.util.ArrayList;
 import java.util.List;
+import spark.Request;
+import spark.Response;
 import spark.Spark;
 
 // main class
@@ -40,6 +43,12 @@ public class Server {
     Spark.get("load", new LoadCSVHandler());
     Spark.get("search", new SearchCSVHandler());
     Spark.get("view", new ViewCSVHandler());
+    Spark.get("broadband", new BroadbandHandler() {
+      @Override
+      public Object handle(Request request, Response response) throws Exception {
+        return null;
+      }
+    });
     Spark.init();
     Spark.awaitInitialization();
 

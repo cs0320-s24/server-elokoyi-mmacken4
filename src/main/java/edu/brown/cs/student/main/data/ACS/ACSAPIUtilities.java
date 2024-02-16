@@ -19,19 +19,24 @@ public class ACSAPIUtilities {
    *  with the real API.
    */
 
-    private static GridResponse resolveStateAndCounty(String stateNum, String countyNum) throws DatasourceException {
-      try {
-        URL requestURL = new URL("https", "api.census.gov", "https://api.census.gov/data/2010/dec/sf1?get=NAME&for=county:" + countyNum  &in=state:1:"+ stateNum);
-        HttpURLConnection clientConnection = connect(requestURL);
-        Moshi moshi = new Moshi.Builder().build();
+    private static ACSResponse resolveStateCode(String stateName) throws DatasourceException {
 
-        // NOTE WELL: THE TYPES GIVEN HERE WOULD VARY ANYTIME THE RESPONSE TYPE VARIES
-        JsonAdapter<GridResponse> adapter = moshi.adapter(GridResponse.class).nonNull();
-        // NOTE: important! pattern for handling the input stream
-        GridResponse body = adapter.fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
-        clientConnection.disconnect();
-        if(body == null || body.properties() == null || body.properties().gridId() == null)
-          throw new DatasourceException("Malformed response from NWS");
+      try {
+        //makes URL given state/county numbers
+        URL requestURL = new URL("https", "api.census.gov", "/data/2010/dec/sf1?get=S2802_C03_022E&for=county:*" + "&in=state:"+ stateNum);
+        HttpURLConnection connection = connect(requestURL);
+        connection.setRequestMethod("GET");
+
+        // sets up Moshi parser
+        Moshi moshi = new Moshi.Builder().build();
+        JsonAdapter<ACSResponse> jsonadapter = moshi.adapter(ACSResponse.class).nonNull();
+
+        // parses JSON response
+        ACSResponse body = jsonadapter.fromJson(new Buffer().readFrom(connection.getInputStream()));
+        connection.disconnect();
+
+        if(body == null || body.broadband() == null)
+          throw new DatasourceException("Malformed response from ACS");
         return body;
       } catch(IOException e) {
         throw new DatasourceException(e.getMessage());
@@ -119,9 +124,9 @@ public class ACSAPIUtilities {
     // They are "inner classes"; NWSAPIDataSource.GridResponse, etc.
     ////////////////////////////////////////////////////////////////
 
-    public record GridResponse(String id, GridResponseProperties properties) { }
+    public record ACSResponse(String stateNum, String countyNum, String broadband) { }
     // Note: case matters! "gridID" will get populated with null, because "gridID" != "gridId"
-    public record GridResponseProperties(String gridId, String gridX, String gridY, String timeZone, String radarStation) {}
+    public record ACSResponseProperties(String gridId, String gridX, String gridY, String timeZone, String radarStation) {}
 
     public record ForecastResponse(String id, ForecastResponseProperties properties) {}
     public record ForecastResponseProperties(String updateTime, ForecastResponseTemperature temperature) {}
