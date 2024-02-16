@@ -2,6 +2,9 @@ package edu.brown.cs.student.main.server;
 
 import static spark.Spark.after;
 
+import edu.brown.cs.student.main.endpoints.LoadCSVHandler;
+import edu.brown.cs.student.main.endpoints.SearchCSVHandler;
+import edu.brown.cs.student.main.endpoints.ViewCSVHandler;
 import java.util.ArrayList;
 import java.util.List;
 import spark.Spark;
@@ -48,8 +51,9 @@ public class Server {
     }
 
     // Setting up the handler for the GET /order and /activity endpoints
-    Spark.get("order", new OrderHandler(menu));
-    Spark.get("activity", new ActivityHandler());
+    Spark.get("load", new LoadCSVHandler());
+    Spark.get("search", new SearchCSVHandler());
+    Spark.get("view", new ViewCSVHandler());
     Spark.init();
     Spark.awaitInitialization();
 
