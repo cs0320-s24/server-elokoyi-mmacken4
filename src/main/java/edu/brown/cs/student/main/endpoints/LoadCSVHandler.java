@@ -1,130 +1,52 @@
 package edu.brown.cs.student.main.endpoints;
 
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
 import edu.brown.cs.student.main.data.ACS.ACS;
 import edu.brown.cs.student.main.data.ACS.ACSAPIUtilities;
+import edu.brown.cs.student.main.data.ACS.ACSResponse;
 import spark.Route;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
 import spark.Request;
 import spark.Response;
 
 
 public class LoadCSVHandler implements Route {
+    private ACSResponse data;
 
-//    private
-//
-//    public void loadcsv(Request request, Response response) {
-//        String filepath = request.queryParams("filepath");
-//        // System.out.println(filepath);
-//        if (filepath == null || filepath.trim().isEmpty()) {
-//            response.status(400);
-//            System.out.println("Error: No filepath given. Please give a valid filepath");
-//        }
-//        try {
-//            CSVParser parser
-//        }
-//    }
-
-    @Override
-    public Object handle(Request request, Response response) throws Exception {
-        return null;
+    public LoadCSVHandler(ACSResponse data) {
+        this.data = data;
     }
-    /*
-    public Object handle(Request request, Response response) {
-    // If you are interested in how parameters are received, try commenting out and
-    // printing these lines! Notice that requesting a specific parameter requires that parameter
-    // to be fulfilled.
-    // If you specify a queryParam, you can access it by appending ?parameterName=name to the
-    // endpoint
-    // ex. http://localhost:3232/activity?participants=num
-    Set<String> params = request.queryParams();
-    //     System.out.println(params);
-    String participants = request.queryParams("participants");
-    //    System.out.println(participants);
 
-    // Creates a hashmap to store the results of the request
-    Map<String, Object> responseMap = new HashMap<>();
-    try {
-      // Sends a request to the API and receives JSON back
-      String activityJson = this.sendRequest(Integer.parseInt(participants));
-      // Deserializes JSON into an Activity
-      Activity activity = ActivityAPIUtilities.deserializeActivity(activityJson);
-      // Adds results to the responseMap
-      responseMap.put("result", "success");
-      responseMap.put("activity", activity);
-      return responseMap;
-    } catch (Exception e) {
-      e.printStackTrace();
-      // This is a relatively unhelpful exception message. An important part of this sprint will be
-      // in learning to debug correctly by creating your own informative error messages where Spark
-      // falls short.
-      responseMap.put("result", "Exception");
-    }
-    return responseMap;
-  }
-
-     */
-
-
-    @Override
-    public Object handle(Request request, Response response) {
-        Set<String> params = request.queryParams();
-        //     System.out.println(params);
-        String participants = request.queryParams("participants");
-        //     System.out.println(participants);
-
-        // Creates a hashmap to store the results of the request
-        Map<String, Object> responseMap = new HashMap<>();
+    public List<List<String>> loadcsv(String filepath) {
         try {
-            // Sends a request to the API and receives JSON back
-            int num = Integer.parseInt(participants);
-            String activityJson = this.sendRequest(num);
-            // Deserializes JSON into an Activity
-            ACS activity = ACSAPIUtilities.deserializeActivity(activityJson);
-            // Adds results to the responseMap
-            responseMap.put("result", "success");
-            responseMap.put("activity", activity);
-            return responseMap;
-        } catch (Exception e) {
-            e.printStackTrace();
-            // This is a relatively unhelpful exception message. An important part of this sprint will be
-            // in learning to debug correctly by creating your own informative error messages where Spark
-            // falls short.
-            responseMap.put("result", "Exception");
+            List<List<String>> data = null;
+            BufferedReader br = new BufferedReader(new FileReader(filepath));
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(",");
+                List<String> row = new ArrayList<>();
+                for (String value : values) {
+                    row.add(value.trim());
+                }
+                data.add(row);
+            }
+            return data;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return responseMap;
     }
-
-    private String sendRequest(int num) throws URISyntaxException, IOException, InterruptedException {
-        // Build a request to this BoredAPI. Try out this link in your browser, what do you see?
-        // TODO 1: Looking at the documentation, how can we add to the URI to query based
-        // on participant number?
-        HttpRequest buildBoredApiRequest =
-            HttpRequest.newBuilder()
-                .uri(new URI("http://www.boredapi.com/api/activity?participants=" + num))
-                .GET()
-                .build();
-
-        // Send that API request then store the response in this variable. Note the generic type.
-        HttpResponse<String> sentBoredApiResponse =
-            HttpClient.newBuilder()
-                .build()
-                .send(buildBoredApiRequest, HttpResponse.BodyHandlers.ofString());
-
-        // What's the difference between these two lines? Why do we return the body? What is useful from
-        // the raw response (hint: how can we use the status of response)?
-        System.out.println(sentBoredApiResponse);
-        System.out.println(sentBoredApiResponse.body());
-
-        return sentBoredApiResponse.body();
-    }
-}
-
 }
