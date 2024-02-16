@@ -20,34 +20,15 @@ public class Server {
           response.header("Access-Control-Allow-Methods", "*");
         });
 
-    // Sets up data needed for the OrderHandler. You will likely not read from local
-    // JSON in this sprint.
-    //    String menuAsJson = ACSAPIUtilities.readInJson("data/menu.json");
-    //    List<ACS> menu = new ArrayList<>();
-    //    try {
-    //      menu = ACSAPIUtilities.deserializeACS(menuAsJson);
-    //    } catch (Exception e) {
-    //      // See note in ActivityHandler about this broad Exception catch... Unsatisfactory, but
-    // gets
-    //      // the job done in the gearup where it is not the focus.
-    //      e.printStackTrace();
-    //      System.err.println("Errored while deserializing the menu");
-    //    }
-
     LoadCSVHandler loadCSVHandler = new LoadCSVHandler();
     ViewCSVHandler viewCSVHandler = new ViewCSVHandler();
 
-    // Setting up the handler for the GET /order and /activity endpoints
-    Spark.get("load", loadCSVHandler.handleLoadCSV());
+    // Setting up the handler for the GET /load, GET /view, GET /search and /broadband endpoints
+    Spark.get("load", loadCSVHandler);
     Spark.get("search", new SearchCSVHandler());
-    Spark.get("view", viewCSVHandler.handleViewCSV());
+    Spark.get("view", viewCSVHandler);
     Spark.get("broadband", new BroadbandHandler());
-    // {
-    //          @Override
-    //          public Object handle(Request request, Response response) throws Exception {
-    //            return null;
-    //          }
-    //        });
+
     Spark.init();
     Spark.awaitInitialization();
 
