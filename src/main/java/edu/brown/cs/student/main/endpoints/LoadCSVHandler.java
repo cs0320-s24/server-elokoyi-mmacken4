@@ -33,8 +33,8 @@ public class LoadCSVHandler<T> implements Route {
 
   private String line;
 
-  static String loadedCSVFilePath;
-  // = "RI_income.csv";
+  static String loadedCSVFilePath = "RI_income.csv";
+
   public LoadCSVHandler() {
     // this.reader = new BufferedReader(reader);
     Creator<T> creator = new Creator<>();
@@ -56,7 +56,7 @@ public class LoadCSVHandler<T> implements Route {
         // Attempt to load the CSV file using your preferred CSV parsing logic
         List<List<String>> csvData = loadLocalCSVFile(filePath);
         //
-        //        loadedCSVFilePath = filePath;
+        loadedCSVFilePath = filePath;
         // Check if the CSV file loading was successful
         if (csvData != null) {
           // Update the loadedCSVFilePath variable to keep track of the loaded file
@@ -90,10 +90,6 @@ public class LoadCSVHandler<T> implements Route {
     System.out.println(filePath);
     return csvParser.parse();
   }
-
-
-
-
 
   //  private static Map<String, Object> successResponse(Object... params) {
   //    Map<String, Object> responseMap = new HashMap<>();
@@ -142,21 +138,21 @@ public class LoadCSVHandler<T> implements Route {
   //      };
 
   private String sendRequest(int stateNum)
-      throws URISyntaxException, IOException, InterruptedException{
+      throws URISyntaxException, IOException, InterruptedException {
     // Build a request to this BoredAPI. Try out this link in your browser, what do you see?
     // TODO 1: Looking at the documentation, how can we add to the URI to query based
     // on participant number?
-    HttpRequest buildBoredApiRequest=
-    HttpRequest.newBuilder()
-    .uri(new URI("https://api.census.gov/data/2010/dec/sf1?get=NAME&for=state:"+stateNum))
-    .GET()
-    .build();
+    HttpRequest buildBoredApiRequest =
+        HttpRequest.newBuilder()
+            .uri(new URI("https://api.census.gov/data/2010/dec/sf1?get=NAME&for=state:" + stateNum))
+            .GET()
+            .build();
 
     // Send that API request then store the response in this variable. Note the generic type.
-    HttpResponse<String> sentBoredApiResponse=
-    HttpClient.newBuilder()
-    .build()
-    .send(buildBoredApiRequest,HttpResponse.BodyHandlers.ofString());
+    HttpResponse<String> sentBoredApiResponse =
+        HttpClient.newBuilder()
+            .build()
+            .send(buildBoredApiRequest, HttpResponse.BodyHandlers.ofString());
 
     // What's the difference between these two lines? Why do we return the body? What is useful from
     // the raw response (hint: how can we use the status of response)?
@@ -164,4 +160,5 @@ public class LoadCSVHandler<T> implements Route {
     System.out.println(sentBoredApiResponse.body());
 
     return sentBoredApiResponse.body();
-    }}
+  }
+}

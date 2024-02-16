@@ -28,11 +28,8 @@ public class Server {
     Spark.get("search", new SearchCSVHandler());
     Spark.get("view", viewCSVHandler);
     Spark.get("broadband", new BroadbandHandler());
-
     Spark.init();
     Spark.awaitInitialization();
-
-    // Notice this link alone leads to a 404... Why is that?
     System.out.println("Server started at http://localhost:" + port);
   }
 }
