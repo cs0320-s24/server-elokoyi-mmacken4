@@ -4,12 +4,10 @@ import edu.brown.cs.student.main.csv.CSVParser;
 import edu.brown.cs.student.main.csv.Creator;
 import edu.brown.cs.student.main.csv.CreatorFromRow;
 import edu.brown.cs.student.main.csv.FactoryFailureException;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
@@ -20,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import spark.Request;
 import spark.Response;
 import spark.Route;
