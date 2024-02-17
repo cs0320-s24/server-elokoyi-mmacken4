@@ -8,6 +8,8 @@ public class Search<T> {
   private CSVParser<T> parser;
   private CreatorFromRow<T> creator;
 
+  public List<List<T>> searchResults;
+
   public Search(CSVParser<T> parser, CreatorFromRow<T> creator) {
     this.parser = parser;
     this.creator = creator;
@@ -42,6 +44,7 @@ public class Search<T> {
             if (columnValue.toString().toLowerCase().equals(value.toLowerCase())) {
               found = true;
               System.out.println(row);
+              searchResults.add(row);
               // return row;
             }
           }
