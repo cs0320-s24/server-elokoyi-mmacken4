@@ -18,14 +18,14 @@ public class SearchCSVHandler implements Route {
 
   ViewCSVHandler viewHandler;
 
-
   @Override
   public Object handle(Request request, Response response) throws Exception {
-    //check if viewed needed here too?
+    // check if viewed needed here too?
     Map<String, Object> responseMap = new HashMap<>();
 
     try {
       if (this.viewHandler.csvHandler.loadedCSVFilePath == null) {
+
         response.status(400);
         System.out.println("Error no csv file loaded");
       }
@@ -52,38 +52,22 @@ public class SearchCSVHandler implements Route {
     }
   }
 
-  private List<List<String>> searchCSV(String searchQuery, String columnID) throws FactoryFailureException, IOException {
+  private List<List<String>> searchCSV(String searchQuery, String columnID)
+      throws FactoryFailureException, IOException {
+    List<List<String>> searchResults = new ArrayList<>();
+    Creator creator1 = new Creator();
     try {
-      CSVParser<String> parser = new CSVParser<>(
-              new FileReader(this.viewHandler.csvHandler.loadedCSVFilePath),
-              new CreatorFromRow<String>() {
-                @Override
-                public List<String> create(List<String> parsedRow) {
-                  // Simply return the list of strings representing the row
-                  return parsedRow;}
-              },
-              true);
-      List<List<String>> searchResults = new ArrayList<>();
+      CSVParser<String> parser =
+          new CSVParser<>(new FileReader(this.csvHandler.loadedCSVFilePath), creator1, true);
 
-      // Parse the entire CSV to get data
-      List<List<String>> parsedData = parser.parse();
-      int columnIndex = parser.headers.indexOf(columnID);
+      Search<List<String>> search = new Search<>(parser, creator1);
+      search.search(this.csvHandler.loadedCSVFilePath, searchQuery, columnID);
 
-      // If columnID is not found in headers, search may not proceed or you need a different logic
-      if (columnIndex == -1) {
-        throw new IllegalArgumentException("Column " + columnID + " not found.");
-      }
-
-      // Filter data based on searchQuery and columnID
-      for (List<String> row : parsedData) {
-        if (columnIndex < row.size() && row.get(columnIndex).contains(searchQuery)) {
-          searchResults.add(row);
-        }
-      }
-      return searchResults;
+      // return searchResults;
     } catch (Exception e) {
       System.out.println("Error: " + e.getMessage());
     }
+    return searchResults;
   }
 
 }

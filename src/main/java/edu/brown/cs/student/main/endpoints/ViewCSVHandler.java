@@ -28,10 +28,7 @@ public class ViewCSVHandler implements Route {
 
   public Object handle(Request request, Response response) {
     // Check if a CSV file is loaded
-<<<<<<< HEAD
-=======
 
->>>>>>> 67706f2d39c5c8e82c859ea29ad5eb5d4c840bb7
     if (this.csvHandler.loadedCSVFilePath == null) {
       response.status(400); // Bad Request status code
       return "No CSV file loaded";
