@@ -1,29 +1,42 @@
 package edu.brown.cs.student.main.endpoints;
 
+import edu.brown.cs.student.main.csv.CSVParser;
+import edu.brown.cs.student.main.csv.Creator;
+import edu.brown.cs.student.main.csv.FactoryFailureException;
+import edu.brown.cs.student.main.csv.Search;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class SearchCSVHandler implements Route {
+
+  private LoadCSVHandler csvHandler;
+
+  public SearchCSVHandler(LoadCSVHandler csvHandler) {
+    this.csvHandler = csvHandler;
+  }
 
   @Override
   public Object handle(Request request, Response response) throws Exception {
-    //check if viewed needed here too?
+    // check if viewed needed here too?
     Map<String, Object> responseMap = new HashMap<>();
 
     try {
-      if (LoadCSVHandler.loadedCSVFilePath == null) {
+      if (csvHandler.loadedCSVFilePath == null) {
         response.status(400);
         return "Error no csv file loaded";
       }
 
       String searchQuery = request.queryParams("query");
+      String columnID = request.queryParams("columnID");
 
-      List<List<String>> searchResults = searchCSV(searchQuery);
+      List<List<String>> searchResults = searchCSV(searchQuery, columnID);
 
       Map<String, String> parametersMap = new HashMap<>();
       parametersMap.put("searchQuery", searchQuery);
@@ -41,7 +54,21 @@ public class SearchCSVHandler implements Route {
     }
   }
 
-  private List<List<String>> searchCSV(String query) {
-    //implement
+  private List<List<String>> searchCSV(String searchQuery, String columnID)
+      throws FactoryFailureException, IOException {
+    List<List<String>> searchResults = new ArrayList<>();
+    Creator creator1 = new Creator();
+    try {
+      CSVParser<String> parser =
+          new CSVParser<>(new FileReader(this.csvHandler.loadedCSVFilePath), creator1, true);
+
+      Search<List<String>> search = new Search<>(parser, creator1);
+      search.search(this.csvHandler.loadedCSVFilePath, searchQuery, columnID);
+
+      // return searchResults;
+    } catch (Exception e) {
+      System.out.println("Error: " + e.getMessage());
+    }
+    return searchResults;
   }
 }
