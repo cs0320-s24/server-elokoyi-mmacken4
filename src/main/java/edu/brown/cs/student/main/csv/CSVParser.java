@@ -13,7 +13,7 @@ public class CSVParser<T> {
 
   private CreatorFromRow<T> creator = null;
 
-  List<String> headers;
+  public List<String> headers;
   private Boolean hasHeaders;
 
   private String line;

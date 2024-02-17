@@ -42,6 +42,7 @@ public class Search<T> {
             if (columnValue.toString().toLowerCase().equals(value.toLowerCase())) {
               found = true;
               System.out.println(row);
+              // return row;
             }
           }
         }

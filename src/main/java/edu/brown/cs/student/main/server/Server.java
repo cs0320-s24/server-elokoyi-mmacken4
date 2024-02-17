@@ -2,7 +2,9 @@ package edu.brown.cs.student.main.server;
 
 import static spark.Spark.after;
 
+import edu.brown.cs.student.main.endpoints.BroadbandHandler;
 import edu.brown.cs.student.main.endpoints.LoadCSVHandler;
+import edu.brown.cs.student.main.endpoints.SearchCSVHandler;
 import edu.brown.cs.student.main.endpoints.ViewCSVHandler;
 import spark.Spark;
 
@@ -24,11 +26,14 @@ public class Server {
 
     // Setting up the handler for the GET /load, GET /view, GET /search and /broadband endpoints
     Spark.get("load", loadCSVHandler);
-    // Spark.get("search", new SearchCSVHandler());
+    Spark.get("search", new SearchCSVHandler(loadCSVHandler));
     Spark.get("view", viewCSVHandler);
-    // Spark.get("broadband", new BroadbandHandler());
+    Spark.get("broadband", new BroadbandHandler());
     Spark.init();
     Spark.awaitInitialization();
+    System.out.println(
+        "Server Started. Please click on the local host link and in the URL bar, add "
+            + "to the end of the link: /load?filepath=, then the name of the your csv filepath");
     System.out.println("Server started at http://localhost:" + port);
   }
 }
