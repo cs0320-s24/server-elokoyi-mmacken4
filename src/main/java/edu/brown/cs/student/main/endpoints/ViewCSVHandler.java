@@ -11,9 +11,11 @@ import spark.Route;
 
 public class ViewCSVHandler implements Route {
 
+  private LoadCSVHandler csvHandler;
+
   public Object handle(Request request, Response response) {
     // Check if a CSV file is loaded
-    if (loadedCSVFilePath == null) {
+    if (this.csvHandler.loadedCSVFilePath == null) {
       response.status(400); // Bad Request status code
       return "No CSV file loaded";
     }
