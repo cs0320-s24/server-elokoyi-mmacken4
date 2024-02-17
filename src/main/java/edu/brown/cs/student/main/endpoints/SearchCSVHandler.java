@@ -80,7 +80,6 @@ public class SearchCSVHandler implements Route {
           searchResults.add(row);
         }
       }
-
       return searchResults;
     } catch (Exception e) {
       System.out.println("Error: " + e.getMessage());
