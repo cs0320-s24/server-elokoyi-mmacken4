@@ -1,5 +1,9 @@
 package edu.brown.cs.student.main.endpoints;
 
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.JsonAdapter;
+import edu.brown.cs.student.main.datasource.ACS.ACS;
+import edu.brown.cs.student.main.datasource.ACS.ACSResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
@@ -31,45 +35,38 @@ public class BroadbandHandler implements Route {
       // Send a request to the ACS API and receive JSON back
       String broadbandData = fetchDataFromACS(stateCode, countyCode);
 
-      // Process the broadband data as needed
-      // (You'll need to parse the ACS API response and extract the relevant information)
-
-      // Include the date and time of the data retrieval in the response
-      LocalDateTime currentTime = LocalDateTime.now();
+      //date and time of the retrieval
+      LocalDateTime currTime = LocalDateTime.now();
       responseMap.put("result", "success");
-      responseMap.put("datetime", currentTime.toString());
+      responseMap.put("datetime", currTime.toString());
       responseMap.put("state", stateName);
       responseMap.put("county", countyName);
 
-      // Include any other relevant data in the response map
-
       return responseMap;
+
     } catch (Exception e) {
       e.printStackTrace();
       responseMap.put("result", "error");
-      responseMap.put("details", "Failed to retrieve broadband data");
+      responseMap.put("details", "Failed to get broadband data");
       return responseMap;
     }
   }
 
-  private String fetchStateCode(String stateName) throws URISyntaxException {
-    // Build a request to the ACS API to get state codes based on the state name
+  private String fetchStateCode(String stateCode) throws URISyntaxException {
+    // Build a request to get state name based on the state code
     HttpRequest stateCodeRequest =
         HttpRequest.newBuilder()
-            .uri(new URI("YOUR_ACS_API_ENDPOINT_FOR_STATE_CODES_HERE" + stateName))
+            .uri(new URI("https://api.census.gov/data/2010/dec/sf1?get=NAME&for=state:" + stateCode))
             .GET()
             .build();
 
-    // Send the state code request and store the response
     try {
       HttpResponse<String> stateCodeResponse =
           HttpClient.newHttpClient().send(stateCodeRequest, HttpResponse.BodyHandlers.ofString());
 
-      // Extract and return the state code from the ACS API response
       return extractStateCodeFromResponse(stateCodeResponse.body());
     } catch (Exception e) {
       e.printStackTrace();
-      // Handle exceptions or rethrow if necessary
       throw new RuntimeException("Failed to fetch state code from ACS API", e);
     }
   }
@@ -80,10 +77,10 @@ public class BroadbandHandler implements Route {
         HttpRequest.newBuilder()
             .uri(
                 new URI(
-                    "YOUR_ACS_API_ENDPOINT_FOR_COUNTY_CODES_HERE"
-                        + stateCode
-                        + "&county="
-                        + countyName))
+                    "https://api.census.gov/data/2021/acs/acs1/subject/variables?get=NAME,S2802_C03_022E&for=county:"
+                        + countyName
+                        + "*&in=state:"
+                        + stateCode))
             .GET()
             .build();
 
@@ -96,21 +93,21 @@ public class BroadbandHandler implements Route {
       return extractCountyCodeFromResponse(countyCodeResponse.body());
     } catch (Exception e) {
       e.printStackTrace();
-      // Handle exceptions or rethrow if necessary
+      // Handle exceptions o
       throw new RuntimeException("Failed to fetch county code from ACS API", e);
     }
   }
 
   private String fetchDataFromACS(String stateCode, String countyCode) throws URISyntaxException {
-    // Build a request to the ACS API based on the target state and county codes
+    // Send a request to the ACS API based on the state and county codes
     HttpRequest acsApiRequest =
         HttpRequest.newBuilder()
             .uri(
                 new URI(
-                    "YOUR_ACS_API_ENDPOINT_FOR_BROADBAND_DATA_HERE"
-                        + stateCode
-                        + "&county="
-                        + countyCode))
+                    "https://api.census.gov/data/2021/acs/acs1/subject/variables?get=NAME,S2802_C03_022E&for=county:"
+                        + countyCode
+                        + "*&in=state:"
+                        + stateCode))
             .GET()
             .build();
 
@@ -123,48 +120,16 @@ public class BroadbandHandler implements Route {
       return acsApiResponse.body();
     } catch (Exception e) {
       e.printStackTrace();
-      // Handle exceptions or rethrow if necessary
+      // Handle exceptions
       throw new RuntimeException("Failed to fetch data from ACS API", e);
     }
   }
 
   private String extractStateCodeFromResponse(String response) {
-    //    try {
-    //      // Parse the ACS API response as a JSON array of arrays
-    //      JsonArray jsonArray = JsonArray.readFrom(response);
-    //
-    //      // Check if the array is not empty
-    //      if (!jsonArray.isEmpty()) {
-    //        // Assuming the state code is at index 2 in the first array
-    //        return jsonArray.get(0).get(2).asString();
-    //      } else {
-    //        throw new RuntimeException("Empty response from ACS API");
-    //      }
-    //    } catch (Exception e) {
-    //      e.printStackTrace();
-    //      // Handle exceptions or rethrow if necessary
-    //      throw new RuntimeException("Failed to extract state code from ACS API response", e);
-    //    }
     return response;
   }
 
   private String extractCountyCodeFromResponse(String response) {
-    //    try {
-    //      // Parse the ACS API response as a JSON array of arrays
-    //      JsonArray jsonArray = JsonArray.readFrom(response);
-    //
-    //      // Check if the array is not empty
-    //      if (!jsonArray.isEmpty()) {
-    //        // Assuming the county code is at index 3 in the first array
-    //        return jsonArray.get(0).get(3).asString();
-    //      } else {
-    //        throw new RuntimeException("Empty response from ACS API");
-    //      }
-    //    } catch (Exception e) {
-    //      e.printStackTrace();
-    //      // Handle exceptions or rethrow if necessary
-    //      throw new RuntimeException("Failed to extract county code from ACS API response", e);
-
     return response;
   }
 }

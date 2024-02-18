@@ -1,11 +1,9 @@
 package edu.brown.cs.student.main.endpoints;
 
-//
 
 import edu.brown.cs.student.main.csv.CSVParser;
 import edu.brown.cs.student.main.csv.Creator;
 import edu.brown.cs.student.main.csv.FactoryFailureException;
-import edu.brown.cs.student.main.endpoints.LoadCSVHandler.*;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
@@ -26,13 +24,11 @@ public class ViewCSVHandler implements Route {
     // Check if a CSV file is loaded
 
     if (this.csvHandler.loadedCSVFilePath == null) {
-      response.status(400); // Bad Request status code
+      response.status(400); // Bad Request code
       return "No CSV file loaded";
     }
 
     try {
-      // Perform your logic to read the CSV file and obtain its contents
-      // For simplicity, let's assume you have a method readCSVFile that returns the data
       List<List<String>> csvData = readCSVFile(this.csvHandler.loadedCSVFilePath);
 
       // Create the response map
@@ -40,9 +36,9 @@ public class ViewCSVHandler implements Route {
       responseMap.put("result", "success");
       responseMap.put("data", csvData);
 
-      // Set properties of the response
-      response.status(200); // OK status code
-      response.type("application/json"); // Set response type
+      // properties of the response
+      response.status(200);
+      response.type("application/json");
 
       // Return the response map as JSON
       return responseMap;
@@ -56,8 +52,6 @@ public class ViewCSVHandler implements Route {
   // Method to read the CSV file and return its contents
   private List<List<String>> readCSVFile(String filePath)
       throws FactoryFailureException, FileNotFoundException {
-    // Implement your logic to read the CSV file using the provided
-    // For demonstration purposes, return a dummy data
 
     // Create a CSVParser instance with FileReader
     Creator creator1 = new Creator();

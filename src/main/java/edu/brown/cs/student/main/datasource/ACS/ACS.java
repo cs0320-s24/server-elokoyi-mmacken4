@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main.data.ACS;
+package edu.brown.cs.student.main.datasource.ACS;
 
 public class ACS {
 
@@ -18,19 +18,6 @@ public class ACS {
     this.county = county;
     this.broadband = broadband;
   }
-
-  /**
-   * Static factory method to make testing easier. Produces a Soup based on parameters and
-   * ingredients. Does *not* produce ActualFlavorExceptions, even if the chef is timid.
-   *
-   * @param ingredients the set of ingredients to try mixing together
-   * @return the new Soup object
-   */
-  //  public static Soup buildNoExceptions(String name, List<String> ingredients) {
-  //    Soup result = new Soup(ingredients);
-  //    result.setSoupName(name);
-  //    return result;
-  //  }
 
   /**
    * Override the toString to be a little more informative.

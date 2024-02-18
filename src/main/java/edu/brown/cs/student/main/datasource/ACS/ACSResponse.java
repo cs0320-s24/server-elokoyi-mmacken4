@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main.data.ACS;
+package edu.brown.cs.student.main.datasource.ACS;
 
 public record ACSResponse(String stateName, String countyName, String broadbandValue) {
   /**
@@ -11,21 +11,6 @@ public record ACSResponse(String stateName, String countyName, String broadbandV
     }
   }
 
-  /**
-   * Convenience function to convert this geolocation to an API parameter string
-   *
-   * @return API parameter string, for the NWS API, corresponding to this location
-   */
-  /*public String toOurServerParams() {
-          return "lat="+lat+"&lon="+lon;
-      }
-  */
-  /**
-   * Static validity checker for geocoordinates. Since lat and lon are in degrees, we expect them to
-   * fall into a particular range. If they do not, the coordinate is invalid.
-   *
-   * @return true if and only if this is a valid coordinate pair
-   */
   // im not sure the range for the county num so that is prob wrong
   public static boolean isValidResponse(String countyName, String stateName) {
     Integer countyNum = Integer.parseInt(countyName);

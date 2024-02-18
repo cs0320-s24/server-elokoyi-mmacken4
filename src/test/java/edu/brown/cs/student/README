@@ -1,3 +1,23 @@
-JUnit tests should go in this directory.
 
-Make sure you package these classes properly so that you earn the Code Organization Badge!
+SERVER PROJECT
+elokoyi
+mmacken4
+
+REPO LINK
+https://github.com/cs0320-s24/server-elokoyi-mmacken4/tree/main
+
+HIGH LEVEL EXPLANATION
+We have a csv package that handles all of the actual csv parsing logic. WIthin the csv folderm there
+is a CSVParser class that handles the parsing logic, a Search calss that handles the search and sorting logic,
+a CreatorFromRow interface that defines a method that allows your CSV parser to convert each row into
+an object of some arbitrary passed type.
+
+Then there is the datasource package that has the ACS folder which has the ACS class, which has the
+state,county, and broadband information structure. Then the ACSAPIUtilities class handles the logic of
+information being passed between the server and converted into usable data.
+
+The endpoints include the LoadCSV, ViewCSV, SearchCSV, and Broaadband Handler.
+
+Known Bugs.
+There are no known bugs.
+
