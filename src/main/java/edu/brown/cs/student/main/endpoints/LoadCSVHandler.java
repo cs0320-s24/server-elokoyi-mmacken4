@@ -26,7 +26,7 @@ public class LoadCSVHandler<T> implements Route {
 
   private BufferedReader reader;
 
-  private CreatorFromRow<T> creator;
+  public CreatorFromRow<T> creator;
 
   List<String> headers;
   private Boolean hasHeaders;

@@ -22,10 +22,6 @@ public class ViewCSVHandler implements Route {
     this.csvHandler = csvHandler;
   }
 
-  // private String loadedCSVFilePath;
-
-  private LoadCSVHandler csvHandler;
-
   public Object handle(Request request, Response response) {
     // Check if a CSV file is loaded
 

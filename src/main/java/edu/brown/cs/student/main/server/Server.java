@@ -6,10 +6,11 @@ import edu.brown.cs.student.main.endpoints.BroadbandHandler;
 import edu.brown.cs.student.main.endpoints.LoadCSVHandler;
 import edu.brown.cs.student.main.endpoints.SearchCSVHandler;
 import edu.brown.cs.student.main.endpoints.ViewCSVHandler;
+import java.io.FileNotFoundException;
 import spark.Spark;
 
 public class Server {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws FileNotFoundException {
     int port = 3232;
     Spark.port(port);
 
@@ -23,11 +24,11 @@ public class Server {
 
     LoadCSVHandler loadCSVHandler = new LoadCSVHandler();
     ViewCSVHandler viewCSVHandler = new ViewCSVHandler(loadCSVHandler);
-
+    SearchCSVHandler searchCSVHandler = new SearchCSVHandler(loadCSVHandler);
 
     // Setting up the handler for the GET /load, GET /view, GET /search and /broadband endpoints
     Spark.get("load", loadCSVHandler);
-    Spark.get("search", new SearchCSVHandler(loadCSVHandler));
+    Spark.get("search", searchCSVHandler);
     Spark.get("view", viewCSVHandler);
     Spark.get("broadband", new BroadbandHandler());
     Spark.init();
